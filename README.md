@@ -10,3 +10,7 @@ This chrome extension enables you organize your tasks effectively right from you
 - Click on **Load unpacked extension**
 
 ![enter image description here](./img/img1.png)
+
+
+### Is done
+![enter image description here](./img/img2.png)
