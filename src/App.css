@@ -68,6 +68,19 @@ ul li.checked::before {
   color: #fff;
 }
 
+.close_done {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 12px 16px 12px 16px;
+  background-color: #ff1a1a;
+}
+
+.close_done:hover {
+  background-color: #e60000;
+  color: #fff;
+}
+
 #input {
   margin-bottom: 20px;
   padding-top: 10px;
@@ -80,4 +93,8 @@ ul li.checked::before {
 
 #input:focus {
   outline:none;
+}
+
+.done {
+  text-decoration: line-through;
 }

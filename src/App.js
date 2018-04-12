@@ -8,6 +8,7 @@ class App extends Component {
 		this.state = {
 			term: '',
 			date: '',
+			is_done: false,
 			items: []
 		};
 	}
@@ -32,10 +33,10 @@ class App extends Component {
 		var curr_year = d.getFullYear();
 
 		event.preventDefault();
-		this.state.items.unshift({"title": this.state.term, "date": curr_date + "-" + curr_month + "-" + curr_year});
+		this.state.items.unshift({"title": this.state.term, is_done: this.state.is_done, "date": curr_date + "-" + curr_month + "-" + curr_year});
 		var items = JSON.stringify(this.state.items)
 		localStorage.setItem('items', items);
-		this.setState({term: '', date: '', items: JSON.parse(localStorage.getItem('items'))})
+		this.setState({term: '', items: JSON.parse(localStorage.getItem('items'))})
 	}
 
 	deleteItem = (idx) => () => {
@@ -45,8 +46,17 @@ class App extends Component {
 		});
 	}
 
+	doneItem = (idx) => (evt) => {
+		const newShareholders = this.state.items.map((item, sidx) => {
+			if (idx !== sidx) return item;
+				item.is_done = true
+		});
+		this.setState({items: this.state.items})
+		var items = JSON.stringify(this.state.items)
+		localStorage.setItem('items', items);
+    }
+
 	render() {
-		console.log(localStorage.getItem('items'))
 		return (
 			<div className="todo-wrapper">
 				<form className="form" onSubmit={this.onSubmit}>
@@ -55,7 +65,7 @@ class App extends Component {
 
 				<ul id="myUL">
 					{this.state.items.map((item, index) => 
-						<li key={index}>{item.title} <span onClick={this.deleteItem(index)} className="close">×</span></li> 
+						<li key={index} className={item.is_done ? 'done' : '' }>{item.title} <span onClick={item.is_done ? this.deleteItem(index) : this.doneItem(index)} className={item.is_done ? 'close_done': 'close'} >×</span></li> 
 					)}
 
 				</ul>
