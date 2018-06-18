@@ -1,6 +1,6 @@
 {
-	"short_name": "React App",
-	"name": "React Extension",
+	"short_name": "To-Do list and Task Manager",
+	"name": "To-Do list and Task Manager",
 	"manifest_version": 2,
 	"icons": {
 		"16": "icon.png",
@@ -9,7 +9,7 @@
 	},
 	"browser_action": {
 		"default_popup": "index.html",
-		"default_title": "React Ext"
+		"default_title": "To-Do list and Task Manager"
 	},
 	"version": "1.0"
 }
