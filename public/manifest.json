@@ -1,6 +1,6 @@
 {
-	"short_name": "To-Do list and Task Manager",
-	"name": "To-Do list and Task Manager",
+	"short_name": "The To Do List",
+	"name": "The To Do List",
 	"manifest_version": 2,
 	"icons": {
 		"16": "icon.png",
@@ -9,7 +9,7 @@
 	},
 	"browser_action": {
 		"default_popup": "index.html",
-		"default_title": "To-Do list and Task Manager"
+		"default_title": "The To Do List"
 	},
 	"version": "1.0"
 }

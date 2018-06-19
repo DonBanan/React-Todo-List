@@ -12,5 +12,6 @@ This chrome extension enables you organize your tasks effectively right from you
 ![enter image description here](./img/img1.png)
 
 
-### Is done
-![enter image description here](./img/img2.png)
+### Что нужно добавить?
+- Добавить нотификацию к заданием на текущей день
+- Добавить нормальную проверку на текстовое поле
