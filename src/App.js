@@ -18,18 +18,19 @@ class App extends Component {
 			notifications: false,
 			is_done: false,
 			items: [],
-			category: 'personal',
+			complite_items: [],
+			category: 'личные',
 			categories: [
-				{"id": 1, "name": "all"},
-				{"id": 2, "name": "personal"},
-				{"id": 3, "name": "workers"},
-				{"id": 4, "name": "assignments"},
-				{"id": 5, "name": "purchases"}
+				{"id": 1, "name": "личные"},
+				{"id": 2, "name": "рабочие"},
+				{"id": 3, "name": "прочие"},
 			]
 		};
 	}
 
 	componentDidMount() {
+		// localStorage.setItem('items', [])
+		// localStorage.setItem('complite_items', [])
 		if (localStorage.getItem('items')) {
 			this.setState({items: JSON.parse(localStorage.getItem('items'))});
 		}else{
@@ -37,13 +38,7 @@ class App extends Component {
 		}
 	}
 
-	handleChangeText = (evt) => {
-		console.log(evt.target.value)
-		this.setState({ [evt.target.name]: evt.target.value });
-	}
-
-	handleChangeText = (evt) => {
-		console.log(evt.target.value)
+	handleChange = (evt) => {
 		this.setState({ [evt.target.name]: evt.target.value });
 	}
 
@@ -51,58 +46,32 @@ class App extends Component {
 		var dt1 = new Date(moment().format('DD MMMM Y'));
 		var dt2 = new Date(date);
 		var days = Math.floor((Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate()) - Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate()) ) /(1000 * 60 * 60 * 24));
-		console.log(days)
-
 		this.setState({
 			startDate: date,
 			days: days
 		});
 	}
 
-	handleChangeCategory = (event) => {
-		this.setState({category: event.target.value});
-	}
-
-	filterCategory = (category) => {
-		var myItems = JSON.parse(localStorage.getItem('items'))
-		if (category['name'] === 'all') {
-			this.setState({items: myItems, category: category['name']})
-		} else {
-			const newArray = myItems.filter(item => item.category === category['name'])
-			this.setState({items: newArray, category: category['name'], is_done: ''})
-		}
-	}
-
-	filterStatus = (status) => {
-		var myItems = JSON.parse(localStorage.getItem('items'))
-		const newArray = myItems.filter(item => item.is_done === status)
-		this.setState({items: newArray, is_done: status, category: ''})
-	}
-
 	onSubmit = (event) => {
 		event.preventDefault();
-		console.log('213')
-		this.state.items.unshift({"title": this.state.text, "category": this.state.category, "is_done": this.state.is_done, "notifications": this.state.notifications, "date": this.state.startDate.format('DD MMMM Y'), "days": this.state.days});
+		this.state.items.unshift({"id": this.state.items.length + 1, "title": this.state.text, "category": this.state.category, "is_done": this.state.is_done, "date": this.state.startDate.format('DD MMMM Y')});
 		var items = JSON.stringify(this.state.items)
 		localStorage.setItem('items', items);
-		this.setState({text: '', items: JSON.parse(localStorage.getItem('items'))})
+		this.setState({text: '', category: 'личные', startDate: moment(), items: JSON.parse(localStorage.getItem('items'))})
 	}
 
-	doneItem = (idx) => (evt) => {
-		console.log(evt.terget)
-		this.state.items.map((item, sidx) => {
-			if (idx !== sidx) return item;
-				if (item.is_done) {
-					item.is_done = false
-				}else {
-					item.is_done = true
-				}
-				return item.is_done
-		});
-		this.setState({items: this.state.items})
-		var items = JSON.stringify(this.state.items)
-		localStorage.setItem('items', items);
-    }
+	// doneItem = (idx) => (evt) => {
+	// 	this.state.items.map((item, sidx) => {
+	// 		if (idx !== sidx) return item;
+	// 		item.is_done = true
+	// 		return item.is_done
+	// 	});
+		
+	// 	const newArrayFalse = this.state.items.filter(item => item.is_done === false)
+	// 	this.setState({items: newArrayFalse})
+	// 	var items = JSON.stringify(newArrayFalse)
+	// 	localStorage.setItem('items', newArrayFalse);
+ //    }
 
 	deleteItem = (idx) => (evt) => {
 		setTimeout(() => {
@@ -110,17 +79,16 @@ class App extends Component {
 				var items = JSON.stringify(this.state.items)
 				localStorage.setItem('items', items);
 			});
-		}, 500);
+		}, 1);
     }
 
 	render() {
 		return (
 			<div id="demo">
-				<h1>All my tasks</h1>
 				<form onSubmit={this.onSubmit}>
 					<div className="form-group">
-						<input type="text" name="text" value={this.state.text} onChange={this.handleChangeText} className="input_text" placeholder="Add new task" required />
-						<select id="categories" name="categories" value={this.state.value} onChange={this.handleChangeCategory}>
+						<input type="text" name="text" value={this.state.text} onChange={this.handleChange} className="input_text" placeholder="новая задача..." required />
+						<select id="categories" name="category" value={this.state.category} onChange={this.handleChange}>
 							{this.state.categories.map((category, index) =>
 								<option key={index} value={category.name}>{category.name}</option>
 							)}
@@ -138,49 +106,58 @@ class App extends Component {
 							withPortal
 						/>
 					</div>
-					<button className="btn red"><span>Add task</span></button>
+					<button className="btn red"><span>Добавить</span></button>
 				</form>
-				<div className="table-categories">
-					{this.state.categories.map((category, index) =>
-						<p key={index} className={this.state.category === category.name ? "table-filter-category active" : "table-filter-category"} onClick={(e) => this.filterCategory(category, e)}>{category.name}</p>
-					)}
-				</div>
-				<div className="table-status">
-					<p className={this.state.is_done === true ? "table-filter-status active" : "table-filter-status"} onClick={(e) => this.filterStatus(true, e)}>Completed</p>
-					<p className={this.state.is_done === false ? "table-filter-status active" : "table-filter-status"} onClick={(e) => this.filterStatus(false, e)}>In progress</p>
-				</div>
 				{this.state.items.length > 0 ?
 					<div className="table-responsive-vertical shadow-z-1">
+						<h1>Задачи в работе</h1>
 						<table id="table" className="table table-hover table-mc-light-blue">
 							<thead>
 								<tr>
 									<th>#</th>
-									<th>Text</th>
-									<th>Category</th>
-									<th>Date</th>
-									<th>Days left</th>
-									<th>Status</th>
-									<th>Action</th>
+									<th>Текст</th>
+									<th>Категория</th>
+									<th>Дата</th>
+									<th>Опции</th>
 								</tr>
 							</thead>
 							<tbody>
 								{this.state.items.map((item, index) => 
-									<tr key={index} onClick={this.doneItem(index)}>
-										<td data-title="ID">{index}</td>
+									<tr key={index}>
+										<td data-title="ID">{item.id}</td>
 										<td data-title="Name">{item.title}</td>
 										<td data-title="Name">{item.category}</td>
 										<td data-title="Date">{item.date}</td>
-										<td data-title="Date">
-											{item.days > 0 ? item.days + ' days':
-											item.days === 0 ? 'Today' :
-											item.days < 0 ?  <span className="in_progress">Overdue task</span> :
-											''
-											}
-										</td>
-										{item.is_done ? 
-											<td data-title="Status" className="completed">Completed</td> :
-											<td data-title="Status" className="in_progress">In progress</td>
-										}
+										<td data-title="Delete" className="in_progress" onClick={this.deleteItem(index)}>Выполнено</td>
+									</tr>
+								)}
+							</tbody>
+						</table>
+					</div>
+					:
+					''
+				}
+				{this.state.complite_items.length > 0 ?
+					<div className="table-responsive-vertical shadow-z-1">
+						<h1>Выполнено</h1>
+						<table id="table" className="table table-hover table-mc-light-blue">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Текст</th>
+									<th>Категория</th>
+									<th>Дата</th>
+									<th>Опции</th>
+								</tr>
+							</thead>
+							<tbody>
+								{this.state.complite_items.map((item, index) => 
+									<tr key={index}>
+										<td data-title="ID">{item.id}</td>
+										<td data-title="Name">{item.title} - {item.is_done ? 'true' : 'false'}</td>
+										<td data-title="Name">{item.category}</td>
+										<td data-title="Date">{item.date}</td>
+										<td data-title="Complite" className="in_progress" onClick={this.doneItem(index)}>Выполнено</td>
 										<td data-title="Delete" className="in_progress" onClick={this.deleteItem(index)}>Delete</td>
 									</tr>
 								)}

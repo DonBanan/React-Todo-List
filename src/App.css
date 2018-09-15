@@ -606,6 +606,12 @@ body {
 
 .in_progress {
   color: #e74c3c;
+  cursor: pointer;
+}
+
+.in_progress:hover {
+  color: green;
+  cursor: pointer;
 }
 
 .active {
