@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
+import 'moment/locale/ru';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -131,6 +132,7 @@ class App extends Component {
 							onChange={this.handleChangeDate}
 							placeholder={this.state.startDate}
 							minDate={moment()}
+							locale="ru"
 	  						maxDate={moment().add(5, "months")}
 							showDisabledMonthNavigation
 							withPortal
